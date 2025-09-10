@@ -1,1 +1,19 @@
-1. Pada langkah pertama, saya 
+Link aplikasi: https://theo-samuel-toko-football.pbp.cs.ui.ac.id/
+1. Cara saya implementasi setiap checklist diatas, yang pertama adalah dengan membuat framework seperti: membuat folder baru, mengaktifkan environtment (python -m venv env), serta melakukan instalasi depedensi awal. Langkah kedua adalah dengan membuat struktur ptojek dengan cara menaruh file settings, manage.py, dan lain-lain di root django-admin start ptoject. Setelah itu, kita mendefinisikan model (membuat file models.py) yang berisi atribute yang akan kita gunakan aplikasi seperti nama, harga, deskirpsi, thumbnail, kategori, dan is_featured, lalu diikuti dengan tipe data masing-masing. Lalu, kita bisa membuat dan menjalankan migrasi. Jangan lupa untuk kita melakukan routing URL agar link yang kita buat bisa diakses oleh orang lain dan django akan mencocokkan URL dengan pola yang ada di file urls.py. Langkah selanjutnya kita bisa memulai untuk membuat isi dari aplikasi kita dengan html. Langkah terakhir, jangan lupa push ke Github dan PWS. 
+
+2. ![alt text](URL_diagram.drawio.png)
+Kaitan antara urls.py, views.py, models.py, dan berkas html adalah urls.py merupakan file yang membuat arah URL ke file view.py sedangkan, views.py adalah logika request yang berfungsi mengambil atau mengubah data melalui models.py berbeda dengan models.py, models.py sendiri merupakan definisi struktur dan query data. Sedangkan, html sendiri adalah file tampilan yang diproses oleh view.py menggunakan cariable dari context.
+
+3. Peran settings pada proyek django adalah sebagai panel kontrol atau pusat konfigurasi pada seluruh projek django. Django memuatnya pada saat start melalui variable environment DJANGO_SETTINGS_MODULE.
+
+SECRET_KEY = os.environ.get("SECRET_KEY")  # simpan di env, JANGAN commit
+DEBUG = os.environ.get("DEBUG", "0") == "1"
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "example.com"]
+
+kode di atas merupakan contoh mengapa settings.py ppenting pada projek django. Pada bagian SECRET_KEY, lalu dilanjutkan pada DEBUG yang berisi True pada lokal dan di produksi wajib bernilai FALSE. Selanjutnya ada ALLOWED_HOSTS yang berisi daftar domain yang diizinkan melayani request.
+
+4. Cara kerja migrasi pada database django dimulai dengan mengubah model terlebih dahulu di model.py. Setelah itu kita bisa menjalankan python manage.py makemigrations yang berfungsi untuk menciptakan file yang dimana isinya merupakan perubahan model yang belum teraplikasi ke dalam basis data. Lalu kita jalankan python manage.py migrate untuk migrasi yang berfungsi untuk mengaplikasi perubahan model yang ada dalam file ke basis data. Setiap kita perubahan pada model, kita wajib melakukan migrasi untuk merefleksikan perubahan tersebut. Setelah itu django akan menyimpan perubahan yang sudah diterapkan.
+
+5. Django dijadikan permulaan untuk pembelajaran pengembangan perangkat lunak karena django sudah terdapat template bawaan seperti: routing, template engine, ORM, form dan validasi, dan masih banyak lagi sehingga memudahkan kita untuk belajar. Tidak hanya itu, dokumentasi dan ekosistem yang django miliki sudah bagus. Dokumentasi jelas dan banyak komunitas yang menyediakan berbagai tutorial sehingga belajar menjadi lebih mudah karena akses sudah ada dimana-mana. Selain itu django sudah berbasis python yang memudahkan untuk dibaca.
+
+6. Sejauh ini asisten dosen sudah melakukan tugas dengan baik dan ketika saya mengalami kesulitas, asdos menjelaskan dengan senang hati sampai saya bisa mengerjakannya
