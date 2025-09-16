@@ -1,3 +1,27 @@
+Link aplikasi: 
+1. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Link aplikasi: https://theo-samuel-toko-football.pbp.cs.ui.ac.id/
 1. Cara saya implementasi setiap checklist diatas, yang pertama adalah dengan membuat framework seperti: membuat folder baru, mengaktifkan environtment (python -m venv env), serta melakukan instalasi depedensi awal. Langkah kedua adalah dengan membuat struktur ptojek dengan cara menaruh file settings, manage.py, dan lain-lain di root django-admin start ptoject. Setelah itu, kita mendefinisikan model (membuat file models.py) yang berisi atribute yang akan kita gunakan aplikasi seperti nama, harga, deskirpsi, thumbnail, kategori, dan is_featured, lalu diikuti dengan tipe data masing-masing. Lalu, kita bisa membuat dan menjalankan migrasi. Jangan lupa untuk kita melakukan routing URL agar link yang kita buat bisa diakses oleh orang lain dan django akan mencocokkan URL dengan pola yang ada di file urls.py. Langkah selanjutnya kita bisa memulai untuk membuat isi dari aplikasi kita dengan html. Langkah terakhir, jangan lupa push ke Github dan PWS. 
 

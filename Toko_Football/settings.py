@@ -32,8 +32,11 @@ SECRET_KEY = 'django-insecure-1srn1*xgt4ta@ojqnxf1-$tceuj-8kc#l1zfdu)6h_)bsgbth$
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "https://pbp.cs.ui.ac.id/theo.samuel/toko-football","theo-samuel-toko-football.pbp.cs.ui.ac.id"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "https://theo-samuel-toko-football.pbp.cs.ui.ac.id","theo-samuel-toko-football.pbp.cs.ui.ac.id"]
 
+CSRF_TRUSTED_ORIGINS = [
+    "<https://theo-samuel-toko-football.pbp.cs.ui.ac.id>"
+]
 
 # Application definition
 
@@ -62,7 +65,7 @@ ROOT_URLCONF = 'Toko_Football.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'], # Tambahkan konten baris ini
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
