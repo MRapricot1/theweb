@@ -1,3 +1,39 @@
+1. Django AuthenticationForm adalah form bawaan Django yang disediakan pada modul untuk melakukan autentikasi user. Default dari AuthenticationForm pada dasarnya terdiri dari dua field utama yaitu password dan username. Kelebihan dari AuthenticationForm adalah kita tidak perlu menuliskan kode nya dari nol karena sudah bawaan Django. Selain itu, juga sudah terintegrasi dengan sistem auth Django jadi bekerja langsung dengan user model dan session framework. AuthenticationForm pada Django juga mudah diperluas seperti bisa menambahkan field tambahan. Kekurangan dari AuthenticationForm adalah sangat terbatas pada username dan password yang standart, jika user inin login menggunakan kode OTP, Google, dll, maka kita harus mengubah lebih lanjut. Tidak hanya itu, pada era modern bisa dibilang kurang fleksibel, jika menginginkan design UI/UX yang lebih interaktif maka kita harus mengubah lebih lanjut.
+
+2. Perbedaan antara autentikasi dan otorisasi adalah autentikasi lebih mengarah ke "siapa kamu?" sedangkan kalau otorisasi adalah "apa saja akses mu" jadi lebih mengarah hal apa saja yang boleh kita lakukan. Cara Django mengimplementasikan kedua konsep tersebut adalah dengan session/cookie, AuthenticationMiddleware, lalu menggunakan authenticate() mengiterasi AUTHENTICATION_BACKENDS, melanjutkan dengan password hashing terakhir dengan login/logout.
+
+3. Kelebihan dan kekurangan session dan cookies dalam konteks menyimpan state di aplikasi web adalah pada cookie, kelebihannya kita mudah untuk scale karena tanpa state di server, biasa diakses oleh JavaScript, dan implementasi yang simple untuk data kecil. Kekurangannya adalah cookies memiliki batas ukuran yang kecil dan terbawa di setiap request sehingga borros bandwith, untuk menampung data sensitif sangat berisiko. Kalau untuk sessions, kelebihannya adalah lebih aman untuk data-data sensitif, kontrol akses menjadi lebih mudah. Kekurangannya adalah butuh penyimpanan di server, dan sangat rentan untuk dihijack bila tidak divalidasi dengan benar.
+
+4. Penggunaan cookies secara umum tidak otomatis aman secara default, tetapi akan bisa aman jika kita mengonfigurasinya dengan benar dan tidak menyimpan data sensitif klien. Risiko yang ada juga cukup beragam seperti terjadinya pencurian via XSS, mengalami CSSRF, terjadinya session hijacking, sampai kebocoran privasi. Tetapi, Django menyediakan default yang aaman asalkan kita mengaktifkan:Cookie sesi & konfigurasi keamanan, Middleware & header keamanan, Proteksi CSRF bawaan, Mitigasi session fixation/hijacking.
+
+5. Cara saya memulai setiap checklist diatas adalah dengan membaca ulang tutorial 3, lalu mulai coba mengimplementasikan pada tugas saya, Proses cukup mudah cuma ada beberapa kendala pada saat saya lupa melakukan migrasi setiap mengubah models. Tetapi selain dari pada itu sudah aman. Tidak hanya itu, program sudah berjalan dengan baik, sesuai permintaan, tetapi kendala yang sama balik lagi yaitu link tidak bisa dibuka melalui PWS. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Link aplikasi: 
 1. Data delivery dalam implementasi platform merupakan peran yang penting karena platform bisa melakukan pertukaran data antar sistem. Jika tidak ada data delivery, platform tidak dapat mengirim data dan informasi yang dibutuhkan sehingga informasi dan data yang kita butuhkan tidak sampai kepa a kita.
 
