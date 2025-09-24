@@ -1,6 +1,20 @@
 Link aplikasi: 
-1. 
+1. Data delivery dalam implementasi platform merupakan peran yang penting karena platform bisa melakukan pertukaran data antar sistem. Jika tidak ada data delivery, platform tidak dapat mengirim data dan informasi yang dibutuhkan sehingga informasi dan data yang kita butuhkan tidak sampai kepa a kita.
 
+2. Menurut saya pribadi, json lebih baik dari pada xml karena json memiliki struktur yang mudah dibaca dan tampilan sederhana bahkan untuk pemula sekalipun. Sedangkan xml menggunakan tag yang lebih panjang dan lebih kompleks dibandingkan dengan json, Sehingga mesin lebih cepat memroses dan memahami. Selain itu, json juga memiliki ukuran file yang lebih kecil dibandingkan dengan xml jadi dari sisi efisien, json lebih unggul dan disukai banyak orang. Sedangkan xml memiliki ukuran file yang lebih besar sehingga dapat memperlambat proses pengiriman data. Dengan itu, banyak orang yang memilih menggunakan json karena keunggulannya tersebut.
+
+3. Fungsi is_valid() pada pada form Django adalah untuk melakukan pemeriksaan terhadap data yang kita masukkan apakah valid atau tidak dengan yang kita inginkan. Method ini penting dan kita butuhkan karena jika ada data yang tidak cocok dengan kriteria kita, maka hal itu dapat menimbulkan potensi adanya virus atau hal-hal yang tidak kita inginkan.
+
+4. Kita membutuhkan csrf_token saat membuat form di Django karena csrf_token dapat kita gunakan untuk mencegah CSRF atau Cross-Site Request Forgery yang dimana ini merupakan serangan yang menggunakan otentikasi user untuk mengirim permintaan yang tidak resmi. Serangan ini dapat membahayakan situs kita maupun situs lain.
+
+5. Cara saya implementasi setiap check list diatas dimulai dengan me-review ulang dari  tutorial 2 dan memahami kembali. Pada saat pengerjaan terdapat kendala yaitu auto save pada vscode saya tidak aktif yang mengakibatkan kode-kode saya tidak ter-update sehingga kode saya tidak muncul di local host. Karena mengikuti tutorial 2, banyak penamaan variabel bahkan function yang salah (harusnya products menjadi news). Untungnya asdos sangat membantu dengan fast respon.
+
+6. Asdos sudah bekerja dengan baik
+
+7. ![json](json.png)
+    ![xml](xml.png)
+    ![json_by_id](json_by_id.png)
+    ![xml_by_id](xml_by_id.png)
 
 
 

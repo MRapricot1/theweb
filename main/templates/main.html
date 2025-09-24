@@ -9,7 +9,11 @@
 <a href="{% url 'main:create_products' %}">
   <button>+ Add Products</button>
 </a>
-s
+<a href="{% url 'main:logout' %}">
+  <button>Logout</button>
+</a>
+
+<h5>Sesi terakhir login: {{ last_login }}</h5>
 <hr>
 
 {% if not products_list %}

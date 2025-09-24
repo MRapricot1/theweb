@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 import uuid
@@ -20,6 +21,7 @@ class Product(models.Model):
     thumbnail = models.URLField(blank=True, null=True)
     is_featured = models.BooleanField(default=False)
     products_views = models.PositiveIntegerField(default=0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     
     def __str__(self):
         return self.name
