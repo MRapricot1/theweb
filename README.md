@@ -1,3 +1,29 @@
+1. Urutan prioritas pengambilan CSS selector adalah jadi, CSS memiliki urutan atau prioritas yang menentukan aturan mana yang akan mereka terapkan pada elemen HTML seperti:
+- universal selector: Universal selector ini memiliki prioritas yang paling rendah
+- Type selector: memiliki prioritas yang lebih tinggi dari universal selector
+- Class selector: Class selector ini memilih elemen berdasarkan kelas yang ditentukan
+- ID selector: Memilih elemen berdasarkan ID yang ditentukan 
+- Inline styles: Inline styles merupakan aturan CSS yang ditulis langsung dalam html menggunakan atribut style dan inline style memiliki prioritas tertinggi 
+
+2. Responsive design menjadi konsep yang penting dalam pengembangan aplikasi web karena responsive design ini dapat membuat website kita terlihat sangat baik di berbagai perangkat yang kita gunakan seperti laptop, tablet, atau handphone. Responsive web ini dapat meemastikan bahwa user tidak terganggu akan format web yang berubah-ubah, jadi tampilan web akan menyesuaikan ukuran layar dari perangkat yang kita gunakan. Sudah banyak aplikasi atau web yang menerapkan Responsive design ini, contohnya Facebook. Aplikasi ini dapat menyesuaikan elemen-elemen dengan ukuran layar yang berbeda.
+
+3. Perbedaan antara margin, border, dan padding adalah Margin merupakan sebuah ruang di luar elemen dan biasanya digunakan untuk memberikan jaarak atau space pada antar elemen web, berbeda dengan border yang merupakan sebuah garis mengelilingi elemen. Biasanya, border digunakan untuk memberikan batas-batas visual pada elemen. Sedangkan padding adalah ruang dalam elemen, yang memberikan ruang ekstra agar konten yang kita buat tidak terlalu menepi. Berikut adalah contoh implementasi margin, border, padding:
+Margin: margin: 30px;
+Border: border: 2px solid black;
+Padding: padding: 15px;
+
+4. Konsep flexbox atau flexible box layout adalah metode dimana tata letak suatu dimensi yang memungkinkan elemen disusun dalam suatu baris atau kolom. Flexbox juga biasa digunakan untuk mengatur ruang di antara elemen secara responsif dan dinamis. Biasanya flexbox berguna untuk pengaturan elemen dalam suatu baris atau kolom yang flexible dan responsif. Sedangkan Grid layout adalah metode tata letak dua dimensi yang memungkinkan elemen dapat disusun dalam baris atau kolom. Kegunaan dari grid layout adalah untuk tata letak yang lebih kompleks, seperti galeri foto, atau dashboard.
+
+5. Cara saya mengimplementasi checklist-checklist diatas adalah dengan mempelajari ulang tutorial lalu mengikuti dan menyesuaikan dengan tugas pada saat ini. Selain itu, saya juga mempelajari dari sumber yang ada untuk membuat navbar yang sesuai dengan instruksi tugas walaupun masih terjadi beberapa hal yang error.
+
+
+
+
+
+
+
+
+
 1. Django AuthenticationForm adalah form bawaan Django yang disediakan pada modul untuk melakukan autentikasi user. Default dari AuthenticationForm pada dasarnya terdiri dari dua field utama yaitu password dan username. Kelebihan dari AuthenticationForm adalah kita tidak perlu menuliskan kode nya dari nol karena sudah bawaan Django. Selain itu, juga sudah terintegrasi dengan sistem auth Django jadi bekerja langsung dengan user model dan session framework. AuthenticationForm pada Django juga mudah diperluas seperti bisa menambahkan field tambahan. Kekurangan dari AuthenticationForm adalah sangat terbatas pada username dan password yang standart, jika user inin login menggunakan kode OTP, Google, dll, maka kita harus mengubah lebih lanjut. Tidak hanya itu, pada era modern bisa dibilang kurang fleksibel, jika menginginkan design UI/UX yang lebih interaktif maka kita harus mengubah lebih lanjut.
 
 2. Perbedaan antara autentikasi dan otorisasi adalah autentikasi lebih mengarah ke "siapa kamu?" sedangkan kalau otorisasi adalah "apa saja akses mu" jadi lebih mengarah hal apa saja yang boleh kita lakukan. Cara Django mengimplementasikan kedua konsep tersebut adalah dengan session/cookie, AuthenticationMiddleware, lalu menggunakan authenticate() mengiterasi AUTHENTICATION_BACKENDS, melanjutkan dengan password hashing terakhir dengan login/logout.

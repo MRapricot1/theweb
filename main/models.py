@@ -10,6 +10,7 @@ CATEGORY_CHOICES = [
     ('jersey', 'Jersey'),
     ('socks', 'Socks'),
     ('ball', 'Ball'),
+    
 ]
 
 
@@ -22,6 +23,13 @@ class Product(models.Model):
     is_featured = models.BooleanField(default=False)
     products_views = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=255)
+
+class Car(models.Model):
+    name = models.CharField(max_length=255)
+    brand = models.CharField(max_length=255)
+    stock = models.IntegerField()
+
     
     def __str__(self):
         return self.name

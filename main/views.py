@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from main.forms import ProductForm
-from main.models import Product
+from main.forms import ProductForm, CarForm
+from main.models import Product, Car
 from django.http import HttpResponse
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm
@@ -12,6 +12,35 @@ from django.contrib.auth.decorators import login_required
 import datetime
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+
+def delete_product(request, id):
+    products = get_object_or_404(Product, pk=id)
+    products.delete()
+    return HttpResponseRedirect(reverse('main:show_main'))
+
+def edit_product(request, id):
+    news = get_object_or_404(Product, pk=id)
+    form = ProductForm(request.POST or None, instance=news)
+    if form.is_valid() and request.method == 'POST':
+        form.save()
+        return redirect('main:show_main')
+
+    context = {
+        'form': form
+    }
+
+    return render(request, "edit_product.html", context)
+
+def cars(request):
+    form = CarForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return redirect('main:show_main')
+    form = CarForm()
+    context = {'forms': form}
+    return render(request, "create_cars.html", context)
+
 
 def logout_user(request):
     logout(request)
