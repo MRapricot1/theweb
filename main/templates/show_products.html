@@ -1,18 +1,64 @@
 {% extends 'base.html' %}
 {% block content %}
-<p><a href="{% url 'main:show_main' %}"><button>← Back to Products List</button></a></p>
 
-<h1>{{ products.title }}</h1>
-<p><b>{{ products.get_category_display }}</b>{% if products.is_featured %} | 
-    <b>Featured</b>{% endif %}{% if products.is_products_hot %} | 
-    <b>Hot</b>{% endif %} | <i>{{ products.created_at|date:"d M Y, H:i" }}</i> 
-    | Views: {{ products.products_views }}</p>
+<div class="min-h-screen bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 text-emerald-50 px-4 py-10">
+  <div class="max-w-3xl mx-auto space-y-8">
 
-{% if products.thumbnail %}
-<img src="{{ products.thumbnail }}" alt="Products thumbnail" width="300">
-<br /><br />
-{% endif %}
+    <!-- Back Button -->
+    <div>
+      <a href="{% url 'main:show_main' %}"
+         class="inline-flex items-center text-emerald-300 hover:text-emerald-200 transition-colors text-sm font-medium">
+        ← Back to Products List
+      </a>
+    </div>
 
-<p>{{ products.description }}</p>
+    <!-- Product Header -->
+    <div class="text-center">
+      <h1 class="text-3xl md:text-4xl font-bold text-emerald-100 tracking-tight">{{ products.name }}</h1>
+      <div class="mt-3 flex flex-wrap justify-center gap-3 text-sm text-emerald-300">
+
+        <span class="bg-emerald-700/60 text-white px-3 py-0.5 rounded-full font-medium shadow-sm">
+          {{ products.get_category_display }}
+        </span>
+
+        {% if products.is_featured %}
+          <span class="bg-yellow-500/90 text-yellow-900 px-3 py-0.5 rounded-full font-semibold shadow-sm">Featured</span>
+        {% endif %}
+
+        {% if products.is_products_hot %}
+          <span class="bg-red-600/90 text-white px-3 py-0.5 rounded-full font-semibold shadow-sm">Hot</span>
+        {% endif %}
+      </div>
+
+      <p class="mt-4 text-emerald-300 text-sm">
+        {% if products.created_at %}
+          <i>{{ products.created_at|date:"d M Y, H:i" }}</i> •
+        {% endif %}
+        <span>{{ products.products_views }} views</span>
+      </p>
+    </div>
+
+    <!-- Thumbnail -->
+    {% if products.thumbnail %}
+      <div class="flex justify-center">
+        <img src="{{ products.thumbnail }}" alt="{{ products.name }}"
+             class="rounded-xl border border-emerald-700/60 shadow-lg w-full max-w-xl object-cover">
+      </div>
+    {% endif %}
+
+    <!-- Description -->
+    <div class="bg-emerald-950/40 backdrop-blur-sm border border-emerald-800 rounded-2xl shadow-md p-6 text-emerald-100 leading-relaxed">
+      <p class="whitespace-pre-line">{{ products.description }}</p>
+    </div>
+
+    <!-- Back Button (Bottom) -->
+    <div class="text-center">
+      <a href="{% url 'main:show_main' %}"
+         class="inline-block bg-emerald-700 hover:bg-emerald-600 text-white px-5 py-2 rounded-lg shadow-md transition-all duration-200 font-medium">
+        ← Back to Products List
+      </a>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}

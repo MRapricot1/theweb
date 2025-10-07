@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from main.forms import ProductForm, CarForm
-from main.models import Product, Car
+from main.forms import ProductForm
+from main.models import Product
 from django.http import HttpResponse
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm
@@ -30,17 +30,6 @@ def edit_product(request, id):
     }
 
     return render(request, "edit_product.html", context)
-
-def cars(request):
-    form = CarForm(request.POST or None)
-
-    if form.is_valid() and request.method == "POST":
-        form.save()
-        return redirect('main:show_main')
-    form = CarForm()
-    context = {'forms': form}
-    return render(request, "create_cars.html", context)
-
 
 def logout_user(request):
     logout(request)

@@ -1,0 +1,101 @@
+<nav class="sticky top-0 z-50 bg-gradient-to-b from-emerald-950/90 to-emerald-900/80 backdrop-blur border-b border-emerald-800">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
+
+      <!-- Brand -->
+      <a href="{% url 'main:show_main' %}" class="flex items-center gap-2">
+        <span class="inline-block h-2 w-2 rounded-full bg-emerald-500"></span>
+        <h1 class="text-xl font-semibold"><span class="text-emerald-300">Football</span> <span class="text-emerald-100">Products</span></h1>
+      </a>
+
+      <!-- Desktop nav -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="{% url 'main:show_main' %}" class="text-emerald-200/80 hover:text-emerald-100 font-medium">Home</a>
+        <a href="{% url 'main:create_products' %}" class="text-emerald-200/80 hover:text-emerald-100 font-medium">Create Products</a>
+      </div>
+
+      <!-- Desktop user -->
+      <div class="hidden md:flex items-center gap-4">
+        {% if user.is_authenticated %}
+          <div class="text-right leading-tight">
+            <div class="text-sm font-semibold text-emerald-100">{{ name|default:user.username }}</div>
+            <div class="text-xs text-emerald-300">{{ npm|default:"Student" }} · {{ class|default:"Class" }}</div>
+          </div>
+          <a href="{% url 'main:logout' %}" class="px-3 py-1.5 rounded-lg border border-emerald-700 text-emerald-200 hover:bg-emerald-900/50 transition">Logout</a>
+        {% else %}
+          <a href="{% url 'main:login' %}" class="text-emerald-200/90 hover:text-emerald-100 font-medium">Login</a>
+          <a href="{% url 'main:register' %}" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium shadow transition">Register</a>
+        {% endif %}
+      </div>
+
+      <!-- Hamburger -->
+      <button id="hamburger"
+              class="md:hidden relative h-10 w-10 inline-flex items-center justify-center rounded-lg text-emerald-200 hover:bg-emerald-900/40 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              aria-controls="mobile-menu" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <!-- 3 lines -->
+        <span class="line top absolute block h-0.5 w-6 bg-current transition-transform duration-300 -translate-y-2"></span>
+        <span class="line mid absolute block h-0.5 w-6 bg-current transition-opacity duration-300"></span>
+        <span class="line bot absolute block h-0.5 w-6 bg-current transition-transform duration-300 translate-y-2"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="md:hidden hidden border-t border-emerald-800 bg-emerald-950/95">
+    <div class="px-4 py-4 space-y-4">
+      <div class="space-y-1">
+        <a href="{% url 'main:show_main' %}" class="block rounded px-3 py-3 text-emerald-200/90 hover:text-emerald-100 hover:bg-emerald-900/40 font-medium">Home</a>
+        <a href="{% url 'main:create_products' %}" class="block rounded px-3 py-3 text-emerald-200/90 hover:text-emerald-100 hover:bg-emerald-900/40 font-medium">Create Products</a>
+        <!-- contoh item lain -->
+        <a href="#" class="block rounded px-3 py-3 text-emerald-200/90 hover:text-emerald-100 hover:bg-emerald-900/40 font-medium">Shoes</a>
+        <a href="#" class="block rounded px-3 py-3 text-emerald-200/90 hover:text-emerald-100 hover:bg-emerald-900/40 font-medium">Apparel</a>
+        <a href="#" class="block rounded px-3 py-3 text-emerald-200/90 hover:text-emerald-100 hover:bg-emerald-900/40 font-medium">Stores</a>
+      </div>
+
+      <div class="border-t border-emerald-800 pt-4">
+        {% if user.is_authenticated %}
+          <div class="mb-3">
+            <div class="font-semibold text-emerald-100">{{ name|default:user.username }}</div>
+            <div class="text-sm text-emerald-300">{{ npm|default:"Student" }} · {{ class|default:"Class" }}</div>
+          </div>
+          <a href="{% url 'main:logout' %}" class="block rounded px-3 py-3 text-left text-red-300 hover:bg-red-900/20 hover:text-red-200 font-medium">Logout</a>
+        {% else %}
+          <a href="{% url 'main:login' %}" class="block rounded px-3 py-3 text-emerald-200/90 hover:text-emerald-100 hover:bg-emerald-900/40 font-medium">Login</a>
+          <a href="{% url 'main:register' %}" class="mt-2 block rounded-lg px-3 py-3 text-center bg-emerald-600 hover:bg-emerald-500 text-white font-semibold shadow">Register</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  (function () {
+    const btn = document.getElementById('hamburger');
+    const menu = document.getElementById('mobile-menu');
+    if (!btn || !menu) return;
+
+    const [top, mid, bot] = btn.querySelectorAll('.line');
+
+    function toggleMenu() {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      menu.classList.toggle('hidden');
+
+      // animate hamburger -> X
+      top.classList.toggle('translate-y-0');
+      top.classList.toggle('rotate-45');
+
+      mid.classList.toggle('opacity-0');
+
+      bot.classList.toggle('translate-y-0');
+      bot.classList.toggle('-rotate-45');
+    }
+
+    btn.addEventListener('click', toggleMenu);
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') toggleMenu();
+    });
+  })();
+</script>
