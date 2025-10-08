@@ -1,18 +1,22 @@
 {% extends 'base.html' %}
-{% block content %}
 
+{% block content %}
 <div class="min-h-screen bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 text-emerald-50 px-4 py-10">
   <div class="max-w-3xl mx-auto">
+    <!-- Header -->
     <div class="flex items-center justify-between mb-6">
       <h1 class="text-3xl font-bold text-emerald-100">Edit Product</h1>
       <a href="{% url 'main:show_main' %}" class="text-emerald-300 hover:text-emerald-200 text-sm">← Back</a>
     </div>
 
-    <form method="POST" class="bg-emerald-950/40 backdrop-blur-sm border border-emerald-800 rounded-2xl p-6 shadow-md">
+    <!-- Form -->
+    <form method="POST" enctype="multipart/form-data"
+          class="bg-emerald-950/40 backdrop-blur-sm border border-emerald-800 rounded-2xl p-6 shadow-md">
       {% csrf_token %}
 
+      {# Non-field errors #}
       {% if form.non_field_errors %}
-        <div class="mb-4 text-red-300 text-sm">
+        <div class="mb-4 rounded-lg border border-red-400/40 bg-red-900/20 text-red-200 p-3 text-sm">
           {{ form.non_field_errors }}
         </div>
       {% endif %}
@@ -20,17 +24,41 @@
       <div class="space-y-5">
         {% for field in form %}
           <div>
-            <label class="block mb-1 text-sm text-emerald-200 font-medium">
-              {{ field.label }}
-              {% if field.field.required %}<span class="text-emerald-400">*</span>{% endif %}
-            </label>
+            {% if field.field.widget.input_type == "checkbox" %}
+              <label class="inline-flex items-center gap-2">
+                {{ field.as_widget }}
+                <span class="text-emerald-200 font-medium">{{ field.label }}</span>
+                {% if field.field.required %}<span class="text-emerald-400">*</span>{% endif %}
+              </label>
+              {% if field.help_text %}
+                <p class="mt-1 text-xs text-emerald-300/80">{{ field.help_text }}</p>
+              {% endif %}
 
-            {{ field }}
+            {% else %}
+              <label for="{{ field.id_for_label }}" class="block mb-1 text-sm text-emerald-200 font-medium">
+                {{ field.label }}
+                {% if field.field.required %}<span class="text-emerald-400">*</span>{% endif %}
+              </label>
 
-            {% if field.errors %}
-              <p class="mt-1 text-sm text-red-300">{{ field.errors|striptags }}</p>
-            {% elif field.help_text %}
-              <p class="mt-1 text-xs text-emerald-300/80">{{ field.help_text }}</p>
+              {# input / textarea / select dengan styling #}
+              {% if field.field.widget.input_type %}
+                {{ field.as_widget(attrs={
+                    'id': field.id_for_label,
+                    'class': 'w-full rounded-lg bg-emerald-900/40 border border-emerald-700/60 text-emerald-50 placeholder-emerald-300/60 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 px-3 py-2'
+                }) }}
+              {% else %}
+                {# untuk widget seperti Select yang input_type-nya None #}
+                {{ field.as_widget(attrs={
+                    'id': field.id_for_label,
+                    'class': 'w-full rounded-lg bg-emerald-900/40 border border-emerald-700/60 text-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 px-3 py-2'
+                }) }}
+              {% endif %}
+
+              {% if field.errors %}
+                <p class="mt-1 text-sm text-red-300">{{ field.errors|striptags }}</p>
+              {% elif field.help_text %}
+                <p class="mt-1 text-xs text-emerald-300/80">{{ field.help_text }}</p>
+              {% endif %}
             {% endif %}
           </div>
         {% endfor %}
@@ -49,5 +77,4 @@
     </form>
   </div>
 </div>
-
-{% endblock %}
+{% endblock content %}

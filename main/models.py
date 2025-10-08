@@ -19,8 +19,10 @@ class Product(models.Model):
     products_views = models.PositiveIntegerField(default=0)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
+
     def __str__(self):
         return self.name
+
 
     @property
     def is_products_hot(self):

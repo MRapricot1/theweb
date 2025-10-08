@@ -1,40 +1,256 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>The Web</title>
+{% endblock meta %}
+
 {% block content %}
 {% include 'navbar.html' %}
+<div class="bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 text-emerald-50 w-full pt-16 min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-<div class="min-h-screen bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 text-emerald-50 px-4 py-10">
-  <div class="max-w-6xl mx-auto space-y-8">
+    <!-- Header Section -->
+    <div class="mb-8 text-center sm:text-left">
+      <h1 class="text-3xl font-extrabold text-emerald-100 mb-2 tracking-tight">Latest The Web - TokoFootball</h1>
+      <p class="text-emerald-300">Stay updated with the latest products in The Web - TokoFootball</p>
+    </div>
 
-    <header class="text-center space-y-3">
-      <h1 class="text-4xl font-bold tracking-tight text-emerald-200">The Web</h1>
-      <div class="text-emerald-300">
-        <p><span class="font-semibold">Name:</span> {{ name }}</p>
-        <p><span class="font-semibold">Class:</span> {{ class }}</p>
-      </div>
-      <div class="flex justify-center gap-4 mt-4">
-        <a href="{% url 'main:create_products' %}" 
-           class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg shadow-md transition-all duration-200 font-medium">
-          + Add Products
+    <button onclick="showModal()" class="inline-flex items-center px-5 py-2.5 
+         bg-gradient-to-r from-emerald-600 to-emerald-500 
+         text-white font-semibold rounded-lg shadow-sm 
+         hover:from-emerald-500 hover:to-emerald-400 
+         transition-all duration-200 ease-in-out 
+         mb-4">
+      Create Product by AJAX
+    </button>
+
+    <!-- Filter Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 bg-emerald-950/40 backdrop-blur-sm border border-emerald-800 rounded-xl shadow-sm p-4">
+      <div class="flex space-x-3 mb-4 sm:mb-0">
+        <a id="filter-all" 
+           class="bg-emerald-600 text-white px-4 py-2 rounded-full font-semibold transition-colors hover:bg-emerald-700">
+          All Products
         </a>
-        <a href="{% url 'main:logout' %}" 
-           class="bg-emerald-800 hover:bg-emerald-700 text-emerald-100 px-4 py-2 rounded-lg border border-emerald-600 transition-all duration-200">
-          Logout
+        <a id="filter-my" 
+           class="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-full font-semibold transition-colors hover:bg-emerald-700 hover:text-white">
+          My Products
         </a>
       </div>
-      <p class="text-sm text-emerald-300 mt-3">Sesi terakhir login: {{ last_login }}</p>
-      <hr class="border-emerald-700 mt-6">
-    </header>
+      {% if user.is_authenticated %}
+        <div class="text-sm text-emerald-200">
+          Last login: <span class="font-medium text-emerald-300">{{ last_login }}</span>
+        </div>
+      {% endif %}
+    </div>
 
-    {% if not products_list %}
-      <p class="text-center text-emerald-300 italic">Belum ada data produk dari barang The Web.</p>
-    {% else %}
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for product in products_list %}
-          {% include 'card_product.html' %}
-        {% endfor %}
+    <!-- Modal (hidden initially) -->
+    <div id="crudModal" class="hidden fixed inset-0 z-50 w-full flex items-center justify-center bg-gray-800 bg-opacity-50">
+      <div id="crudModalContent" class="bg-white rounded-lg shadow-lg w-5/6 sm:w-3/5 md:w-1/2 lg:w-2/5 xl:w-1/3 max-h-screen overflow-y-auto">
+        <!-- Modal header -->
+        <div class="flex items-center justify-between p-4 border-b">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900">
+              Create New Product
+            </h3>
+            <p class="text-sm text-gray-600 mt-1">Add Product</p>
+          </div>
+          <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" onclick="hideModal()">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="px-6 py-4 space-y-6">
+          <form id="productForm">
+            <div class="mb-4">
+              <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
+              <input type="text" id="name" name="name" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Enter product name" required>
+            </div>
+            <div class="mb-4">
+              <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+              <textarea id="description" name="description" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Enter product description" required></textarea>
+            </div>
+            <div class="mb-4">
+              <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+              <input type="number" id="price" name="price" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="Enter product price" required>
+            </div>
+            <div class="mb-4">
+              <label for="thumbnail" class="block text-sm font-medium text-gray-700">Thumbnail URL</label>
+              <input type="url" id="thumbnail" name="thumbnail" class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2" placeholder="https://example.com/image.jpg">
+            </div>
+            <div class="mb-4">
+              <div class="flex items-center">
+                <input id="is_featured" name="is_featured" type="checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded">
+                <label for="is_featured" class="ml-2 text-sm font-medium text-gray-900">Featured Product</label>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="flex flex-col sm:flex-row gap-4 p-6 border-t border-gray-200 rounded-b">
+          <button type="button" id="cancelButton" class="order-2 sm:order-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-md font-medium hover:bg-gray-50 transition-colors text-center" onclick="hideModal()">Cancel</button>
+          <button type="submit" id="submitProduct" form="productForm" class="order-1 sm:order-2 flex-1 bg-emerald-600 text-white px-6 py-3 rounded-md font-medium hover:bg-emerald-700 transition-colors">Add Product</button>
+        </div>
       </div>
-    {% endif %}
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading" class="bg-emerald-950/40 backdrop-blur-sm border border-emerald-800 shadow rounded-xl p-12 text-center hidden">
+      <svg class="animate-spin h-8 w-8 text-emerald-300 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+      </svg>
+      <p class="text-emerald-300 mt-3">Loading products...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="error" class="hidden text-center text-red-300 font-medium"></div>
+
+    <!-- Product Grid -->
+    <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden"></div>
+
+    <!-- Empty State -->
+    <div id="empty" class="bg-emerald-950/40 backdrop-blur-sm border border-emerald-800 shadow p-12 text-center hidden">
+      <div class="w-32 h-32 mx-auto mb-4">
+        <img src="{% static 'image/no-products.png' %}" alt="No products available" class="w-full h-full object-contain">
+      </div>
+      <h3 class="text-lg font-bold text-emerald-100 mb-2">No products found</h3>
+      <p class="text-emerald-200 mb-6">High Quality Football equipment only in The Web - TokoFootball</p>
+      <a href="{% url 'main:create_products' %}" 
+         class="inline-flex items-center px-5 py-2.5 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 transition-colors font-semibold shadow">
+        Create Products
+      </a>
+    </div>
   </div>
 </div>
 
+<script>
+// === CONFIG ===
+const PRODUCT_API_ENDPOINT = "{% url 'main:show_json' %}";
+const CURRENT_USER_ID = "{{ user.id|default_if_none:'' }}";
+
+// === DOM ELEMENTS ===
+const loadingSpinner = document.getElementById('loading');
+const errorMessage = document.getElementById('error');
+const emptyStateDisplay = document.getElementById('empty');
+const productGridContainer = document.getElementById('grid');
+const showAllProductsButton = document.getElementById('filter-all');
+const showMyProductsButton = document.getElementById('filter-my');
+
+// === STATE ===
+let activeFilter = 'all';
+let allProductsData = [];
+
+// === FILTER BUTTONS STYLE ===
+function updateFilterButtonsAppearance() {
+  if (!showAllProductsButton || !showMyProductsButton) return;
+
+  if (activeFilter === 'all') {
+    showAllProductsButton.className = 'bg-emerald-600 text-white px-4 py-2 rounded-full font-semibold transition-colors hover:bg-emerald-700';
+    showMyProductsButton.className = 'bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-full font-semibold transition-colors hover:bg-emerald-700 hover:text-white';
+  } else {
+    showMyProductsButton.className = 'bg-emerald-600 text-white px-4 py-2 rounded-full font-semibold transition-colors hover:bg-emerald-700';
+    showAllProductsButton.className = 'bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-full font-semibold transition-colors hover:bg-emerald-700 hover:text-white';
+  }
+}
+
+// === DISPLAY CONTROL ===
+function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+  loadingSpinner.classList.toggle('hidden', !showLoading);
+  errorMessage.classList.toggle('hidden', !showError);
+  emptyStateDisplay.classList.toggle('hidden', !showEmpty);
+  productGridContainer.classList.toggle('hidden', !showGrid);
+
+  if (showGrid) {
+    productGridContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+  }
+}
+
+// === OPEN & CLOSE MODAL ===
+function showModal() {
+  document.getElementById('crudModal').classList.remove('hidden');
+}
+
+function hideModal() {
+  document.getElementById('crudModal').classList.add('hidden');
+}
+
+// === ADD PRODUCT USING AJAX ===
+async function addProduct(productData) {
+  try {
+    const response = await fetch(PRODUCT_API_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(productData),
+    });
+
+    if (!response.ok) throw new Error('Failed to add product');
+    
+    const newProduct = await response.json();
+    allProductsData.push(newProduct);
+    filterAndDisplayProducts();
+    hideModal(); // Hide modal after submitting
+  } catch (error) {
+    console.error('Error adding product:', error);
+  }
+}
+
+// === FORM SUBMIT HANDLER ===
+document.getElementById('submitProduct').addEventListener('click', (e) => {
+  e.preventDefault();
+  const productData = {
+    name: document.getElementById('name').value,
+    description: document.getElementById('description').value,
+    price: document.getElementById('price').value,
+    thumbnail: document.getElementById('thumbnail').value,
+    is_featured: document.getElementById('is_featured').checked,
+  };
+  addProduct(productData);
+});
+
+// === FETCH DATA ===
+async function fetchProducts() {
+  try {
+    displayPageSection({ showLoading: true });
+
+    const response = await fetch(PRODUCT_API_ENDPOINT, { headers: { 'Accept': 'application/json' } });
+    if (!response.ok) throw new Error('Gagal mengambil data produk dari server');
+
+    const productData = await response.json();
+    allProductsData = productData || [];
+
+    filterAndDisplayProducts();
+  } catch (error) {
+    console.error('Error loading products:', error);
+    displayPageSection({ showError: true });
+  }
+}
+
+// === EVENT HANDLERS ===
+function handleShowAllProductsClick() {
+  activeFilter = 'all';
+  filterAndDisplayProducts();
+}
+
+function handleShowMyProductsClick() {
+  activeFilter = 'my';
+  filterAndDisplayProducts();
+}
+
+// === INIT ===
+function initializeProductPage() {
+  showAllProductsButton.addEventListener('click', handleShowAllProductsClick);
+  showMyProductsButton.addEventListener('click', handleShowMyProductsClick);
+  fetchProducts();
+}
+
+initializeProductPage();
+</script>
 {% endblock content %}

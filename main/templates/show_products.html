@@ -1,64 +1,147 @@
-{% extends 'base.html' %}
-{% block content %}
+<script>
+// Configuration (pakai id product dari context view)
+const PRODUCT_ID =" {{ products.id }}"
+const PRODUCT_DETAIL_ENDPOINT = `{% url 'main:show_json_by_id' 0 %}`.replace('0', PRODUCT_ID);
 
-<div class="min-h-screen bg-gradient-to-br from-emerald-950 via-emerald-900 to-emerald-800 text-emerald-50 px-4 py-10">
-  <div class="max-w-3xl mx-auto space-y-8">
+// DOM Elements (id mengikuti template tutorial)
+const loadingState = document.getElementById('loading-state') || document.getElementById('loading');
+const errorState = document.getElementById('error-state') || document.getElementById('error');
+const articleContent = document.getElementById('article-content') || document.getElementById('content');
+const badgesContainer = document.getElementById('badges-container') || document.getElementById('badges');
+const articleTitle = document.getElementById('article-title') || document.getElementById('title');
+const articleDate = document.getElementById('article-date'); // boleh null
+const articleViews = document.getElementById('article-views') || document.getElementById('views');
+const featuredImageContainer = document.getElementById('featured-image-container') || document.getElementById('thumb-wrap');
+const featuredImage = document.getElementById('featured-image') || document.getElementById('thumb');
+const articleContentText = document.getElementById('article-content-text') || document.getElementById('desc');
+const articleAuthor = document.getElementById('article-author') || document.getElementById('author');
 
-    <!-- Back Button -->
-    <div>
-      <a href="{% url 'main:show_main' %}"
-         class="inline-flex items-center text-emerald-300 hover:text-emerald-200 transition-colors text-sm font-medium">
-        ← Back to Products List
-      </a>
-    </div>
+// Show/hide page sections
+function showState(state) {
+  if (loadingState) loadingState.classList.toggle('hidden', state !== 'loading');
+  if (errorState) errorState.classList.toggle('hidden', state !== 'error');
+  if (articleContent) articleContent.classList.toggle('hidden', state !== 'ready');
+}
 
-    <!-- Product Header -->
-    <div class="text-center">
-      <h1 class="text-3xl md:text-4xl font-bold text-emerald-100 tracking-tight">{{ products.name }}</h1>
-      <div class="mt-3 flex flex-wrap justify-center gap-3 text-sm text-emerald-300">
+// Get readable category name (sesuaikan dengan CATEGORY_CHOICES Product)
+function getCategoryLabel(code) {
+  const map = { update: 'Update', jersey: 'Jersey', socks: 'Socks', ball: 'Ball' };
+  return map[code] || code || 'General';
+}
 
-        <span class="bg-emerald-700/60 text-white px-3 py-0.5 rounded-full font-medium shadow-sm">
-          {{ products.get_category_display }}
-        </span>
+// Escape HTML
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, m => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[m]));
+}
 
-        {% if products.is_featured %}
-          <span class="bg-yellow-500/90 text-yellow-900 px-3 py-0.5 rounded-full font-semibold shadow-sm">Featured</span>
-        {% endif %}
+// Render product content
+function renderProduct(prod) {
+  // Title
+  if (articleTitle) articleTitle.textContent = prod.name;
+  document.title = `${prod.name} - The Web`;
 
-        {% if products.is_products_hot %}
-          <span class="bg-red-600/90 text-white px-3 py-0.5 rounded-full font-semibold shadow-sm">Hot</span>
-        {% endif %}
-      </div>
+  // Badges
+  if (badgesContainer) {
+    badgesContainer.innerHTML = '';
 
-      <p class="mt-4 text-emerald-300 text-sm">
-        {% if products.created_at %}
-          <i>{{ products.created_at|date:"d M Y, H:i" }}</i> •
-        {% endif %}
-        <span>{{ products.products_views }} views</span>
-      </p>
-    </div>
+    // Category
+    const cat = document.createElement('span');
+    cat.className = 'inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-emerald-700 text-white';
+    cat.textContent = getCategoryLabel(prod.category);
+    badgesContainer.appendChild(cat);
 
-    <!-- Thumbnail -->
-    {% if products.thumbnail %}
-      <div class="flex justify-center">
-        <img src="{{ products.thumbnail }}" alt="{{ products.name }}"
-             class="rounded-xl border border-emerald-700/60 shadow-lg w-full max-w-xl object-cover">
-      </div>
-    {% endif %}
+    // Featured
+    if (prod.is_featured) {
+      const f = document.createElement('span');
+      f.className = 'inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-yellow-100 text-yellow-800';
+      f.textContent = 'Featured';
+      badgesContainer.appendChild(f);
+    }
 
-    <!-- Description -->
-    <div class="bg-emerald-950/40 backdrop-blur-sm border border-emerald-800 rounded-2xl shadow-md p-6 text-emerald-100 leading-relaxed">
-      <p class="whitespace-pre-line">{{ products.description }}</p>
-    </div>
+    // Hot (>= 21 views)
+    if ((prod.products_views || 0) > 20) {
+      const h = document.createElement('span');
+      h.className = 'inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-red-100 text-red-800';
+      h.textContent = 'Hot';
+      badgesContainer.appendChild(h);
+    }
+  }
 
-    <!-- Back Button (Bottom) -->
-    <div class="text-center">
-      <a href="{% url 'main:show_main' %}"
-         class="inline-block bg-emerald-700 hover:bg-emerald-600 text-white px-5 py-2 rounded-lg shadow-md transition-all duration-200 font-medium">
-        ← Back to Products List
-      </a>
-    </div>
-  </div>
-</div>
+  // Date (Product tidak punya created_at → sembunyikan jika elemen ada)
+  if (articleDate) {
+    articleDate.textContent = '';
+    articleDate.parentElement?.classList?.add('hidden'); // sembunyikan wrapper
+  }
 
-{% endblock content %}
+  // Views
+  if (articleViews) {
+    articleViews.textContent = `${prod.products_views ?? 0} views`;
+  }
+
+  // Image
+  if (featuredImage && featuredImageContainer) {
+    if (prod.thumbnail) {
+      featuredImage.src = prod.thumbnail;
+      featuredImage.alt = prod.name;
+      featuredImageContainer.classList.remove('hidden');
+    } else {
+      featuredImageContainer.classList.add('hidden');
+    }
+  }
+
+  // Content/Description
+  if (articleContentText) {
+    articleContentText.textContent = prod.description || '';
+  }
+
+  // Author
+  if (articleAuthor) {
+    const authorName = prod.user_username || 'Anonymous';
+    articleAuthor.textContent = `Author: ${authorName}`;
+  }
+}
+
+// Normalisasi data (dukung JsonResponse datar & serializers lama)
+function normalize(raw) {
+  // A) JsonResponse datar (disarankan)
+  if (raw && raw.id !== undefined && raw.name !== undefined) return raw;
+
+  // B) serializers.serialize -> array berisi 1 elemen
+  if (Array.isArray(raw) && raw.length) {
+    const it = raw[0];
+    const f = it.fields || {};
+    return {
+      id: it.pk,
+      name: f.name,
+      description: f.description || '',
+      category: f.category || null,
+      thumbnail: f.thumbnail || null,
+      products_views: f.products_views || 0,
+      is_featured: !!f.is_featured,
+      user_username: null,
+    };
+  }
+  return {};
+}
+
+// Fetch product detail
+async function loadProductDetail() {
+  try {
+    showState('loading');
+    const resp = await fetch(PRODUCT_DETAIL_ENDPOINT, { headers: { 'Accept': 'application/json' } });
+    if (!resp.ok) throw new Error('Failed to fetch product detail');
+    const data = await resp.json();
+    const product = normalize(data);
+    renderProduct(product);
+    showState('ready');
+  } catch (err) {
+    console.error('Error loading product detail:', err);
+    showState('error');
+  }
+}
+
+// Init
+loadProductDetail();
+</script>

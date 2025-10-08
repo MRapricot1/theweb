@@ -1,3 +1,29 @@
+Perbedaan antara ynchronous request dan asynchronous request adalah, ynchronous request merupakan jenis permintaan di mana browser akan menunggu respons dari server sebelum melanjutkan proses lainnya. Artinya, halaman akan berhenti sementara hingga server mengirimkan respons. Sedangkan, asynchronous request adalah permintaan yang berjalan di latar belakang tanpa perlu menghentikan aktivitas di halaman utama. Dengan asynchronous request (seperti pada AJAX), pengguna tetap bisa berinteraksi dengan halaman meskipun data sedang dikirim atau diterima dari server.
+
+2. Cara AJAx bekerja di django dengan cara, mengirimkan data ke server secara asinkron menggunakan JavaScript.
+Alur nya seperti:
+- Saat terjadi event (misalnya klik tombol atau submit form), JavaScript akan mengirim HTTP request ke URL Django melalui fetch() atau XMLHttpRequest().
+- Request ini diproses oleh view Django, yang kemudian mengambil data dari database atau melakukan logika tertentu.
+- View Django akan mengembalikan JsonResponse atau sebagian HTML sebagai respons
+- Setelah menerima respons, JavaScript akan memperbarui tampilan halaman (DOM) sesuai data yang diterima tanpa memuat ulang halaman secara keseluruhan.
+
+3. Keuntungan menggunakan AJAX dibandingkan render biasa di Django adalah membuat interaksi pengguna menjadi lebih cepat dan dinamis. Dengan AJAX, halaman tidak perlu di-refresh setiap kali melakukan permintaan ke server, sehingga Waktu respon menjadi lebih singkat, Penggunaan bandwidth lebih efisien, Proses seperti pencarian data, validasi form, dan update konten bisa dilakukan secara real-time.
+
+4. Cara memastikan keamanan saat menggunakan AJAX untuk fitur Login dan Register di Django adlah dengan menerapkan beberapa hal berikut: 
+- Gunakan CSRF Token untuk setiap permintaan POST agar server dapat memverifikasi keaslian permintaan.
+- Gunakan HTTPS agar data sensitif seperti password tidak bocor.
+- Lakukan validasi di sisi server agar input tidak bisa dimanipulasi dari sisi klien.
+- Lindungi dari serangan XSS dengan cara melakukan escaping pada data yang akan ditampilkan di halaman.
+- Batasi percobaan login untuk mencegah serangan brute force.
+
+5. Pengaruh AJAX terhadap pengalaman pengguna (User Experience) pada website adalah AJAX memberikan pengaruh yang besar terhadap peningkatan User Experience (UX). Dengan AJAX, interaksi di website menjadi lebih cepat, responsif, dan terasa mulus. Pengguna tidak perlu menunggu reload halaman setiap kali melakukan aksi seperti menambah data, login, atau mencari informasi.
+
+
+
+
+
+
+
 1. Urutan prioritas pengambilan CSS selector adalah jadi, CSS memiliki urutan atau prioritas yang menentukan aturan mana yang akan mereka terapkan pada elemen HTML seperti:
 - universal selector: Universal selector ini memiliki prioritas yang paling rendah
 - Type selector: memiliki prioritas yang lebih tinggi dari universal selector

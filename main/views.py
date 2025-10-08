@@ -10,8 +10,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 import datetime
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.http import HttpResponseRedirect, JsonResponse
+from django.urls import reverse 
+
 
 def delete_product(request, id):
     products = get_object_or_404(Product, pk=id)
@@ -66,12 +67,26 @@ def register(request):
     return render(request, 'register.html', context)
 
 def show_json_by_id(request, products_id):
-   try:
-       products_item = Product.objects.get(pk=products_id)
-       json_data = serializers.serialize("json", [products_item])
-       return HttpResponse(json_data, content_type="application/json")
-   except Product.DoesNotExist:
-       return HttpResponse(status=404)
+  # GANTI fungsi show_json_by_id lama kamu dengan ini
+    try:
+        p = Product.objects.select_related('user').get(pk=products_id)
+        data = {
+            "id": p.id,  # int
+            "name": p.name,
+            "description": p.description,
+            "price": p.price,
+            "category": p.category,                     
+            "thumbnail": p.thumbnail,
+            "products_views": p.products_views,
+            "is_featured": p.is_featured,
+            "is_products_hot": p.is_products_hot,       
+            "user_id": p.user.id,
+            "user_username": p.user.username if p.user else None,
+        }
+        return JsonResponse(data)
+    except Product.DoesNotExist:
+        return JsonResponse({"detail": "Not found"}, status=404)
+
 
 def show_xml_by_id(request, products_id):
    try:
@@ -94,8 +109,22 @@ def show_xml_by_id(request, products_id):
 
 def show_json(request):
     products_list = Product.objects.all()
-    json_data = serializers.serialize("json", products_list)
-    return HttpResponse(json_data, content_type="application/json")
+    data = [
+        {
+            'id': str(products.id),
+            'title': products.name,
+            'content': products.content,
+            'category': products.category,
+            'thumbnail': products.thumbnail,
+            'news_views': products.news_views,
+            'created_at': products.created_at.isoformat(), #if products.created_at else None,
+            'is_featured': products.is_featured,
+            'user_id': products.user_id,
+        }
+        for products in products_list
+    ]
+
+    return JsonResponse(data, safe=False)
 
 def show_xml(request):
     products_list = Product.objects.all()
